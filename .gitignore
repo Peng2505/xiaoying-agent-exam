@@ -1,0 +1,22 @@
+# 密钥与本地环境
+.env
+.venv/
+venv/
+
+# Python 缓存与构建产物
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+
+# 运行时产物（测试证据另存于 examples/；勿提交本地 runs/saved_plans）
+runs/
+saved_plans/
+
+# 编辑器与本地 AI 计划（非交付物）
+.idea/
+.vscode/
+.cursor/
+

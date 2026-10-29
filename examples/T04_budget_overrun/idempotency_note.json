@@ -1,0 +1,8 @@
+{
+  "note": "不修改原有 report/trace。本文件仅补充说明：本场景 saved_plan.duplicate=true 表示复用了阶段C探索性运行已写入的同一指纹方案文件，不是首次落盘。",
+  "plan_id": "plan_20261029T051956Z_f2092fb7",
+  "first_save_origin": "examples/T04_exploratory（阶段C探索性运行，formal_acceptance=false）",
+  "formal_t04_behavior": "正式T04 再次保存相同方案内容时命中幂等索引，返回原 plan_id 与 duplicate=true；文件内容与报告费用一致（total_cost=10, format=video_basic）。",
+  "verified_file_exists": true,
+  "verified_fingerprint_match": true
+}

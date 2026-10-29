@@ -1,0 +1,13 @@
+{
+  "argv": [
+    "run",
+    "--topic",
+    "夏季新品发布",
+    "--budget",
+    "15",
+    "--today",
+    "2026-11-01"
+  ],
+  "omitted": ["deadline"],
+  "note": "故意不传 deadline，验证 CLI 拒识且不调用 LLM"
+}

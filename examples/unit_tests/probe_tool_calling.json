@@ -1,0 +1,51 @@
+{
+  "ok": true,
+  "base_url": "https://api.deepseek.com",
+  "model": "deepseek-flash",
+  "thinking": "disabled",
+  "configured": true,
+  "response_model": "deepseek-flash",
+  "finish_reason": "tool_calls",
+  "tool_call_count": 1,
+  "tool_calls": [
+    {
+      "id": "call_00_Tsft1ZUWwe7INauxTYYl6579",
+      "name": "update_plan",
+      "parse_error": null,
+      "arguments": {
+        "reason": "为\"夏季新品发布\"主题制定执行计划：先检索素材，再生成脚本，随后核算成本与工期，最后复核并保存方案。",
+        "steps": [
+          {
+            "step_id": "s1",
+            "name": "检索夏季新品发布相关素材",
+            "tool": "search_materials"
+          },
+          {
+            "step_id": "s2",
+            "name": "基于素材生成发布脚本",
+            "tool": "generate_script",
+            "depends_on": [
+              "s1"
+            ]
+          },
+          {
+            "step_id": "s3",
+            "name": "核算成本与工期",
+            "tool": "estimate_cost",
+            "depends_on": [
+              "s2"
+            ]
+          },
+          {
+            "step_id": "s4",
+            "name": "复核约束并保存方案",
+            "tool": "save_plan",
+            "depends_on": [
+              "s3"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

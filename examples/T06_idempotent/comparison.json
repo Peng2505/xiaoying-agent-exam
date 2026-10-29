@@ -1,0 +1,18 @@
+{
+  "run1": {
+    "run_id": "20261029T063814Z_2a32fec4",
+    "plan_id": "plan_20261029T063833Z_f8267f59",
+    "duplicate": false,
+    "fingerprint": "92144148901dde7af6fb024f52f926bab750f3f34b51be65d46c51c4c6c3e28a",
+    "total_cost": 8
+  },
+  "run2": {
+    "run_id": "20261029T063837Z_c5679496",
+    "plan_id": "plan_20261029T063833Z_f8267f59",
+    "duplicate": true,
+    "fingerprint": "92144148901dde7af6fb024f52f926bab750f3f34b51be65d46c51c4c6c3e28a",
+    "total_cost": 8
+  },
+  "same_fingerprint": true,
+  "same_plan_id": true
+}

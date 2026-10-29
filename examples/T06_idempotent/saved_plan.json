@@ -1,0 +1,34 @@
+{
+  "topic": "幂等测试活动夏季新品",
+  "budget": 15,
+  "deadline": "2026-11-20",
+  "today": "2026-11-01",
+  "format": "graphic",
+  "material_ids": [
+    "M001",
+    "M002",
+    "M003",
+    "M006"
+  ],
+  "resource_items": [
+    "copywriting",
+    "visual_design",
+    "layout"
+  ],
+  "total_cost": 8,
+  "total_days": 3,
+  "finish_date": "2026-11-04",
+  "script_id": "script_6c985a353a",
+  "estimate_id": "est_513b1907a5",
+  "outline": [
+    "主题：幂等测试活动夏季新品",
+    "形式：图文长图/海报组：视觉设计加排版，适合社交平台传播",
+    "开场：引出活动主题与目标受众",
+    "主体：结合素材展示卖点 —— 夏季新品开箱实拍片段, 新品卖点信息图, 用户好评截图合集, 品牌口号与标准字",
+    "结尾：行动号召与活动截止提醒"
+  ],
+  "run_id": "20261029T063814Z_2a32fec4",
+  "plan_id": "plan_20261029T063833Z_f8267f59",
+  "fingerprint": "92144148901dde7af6fb024f52f926bab750f3f34b51be65d46c51c4c6c3e28a",
+  "saved_at": "2026-10-29T06:38:33.797886+00:00"
+}

@@ -1,0 +1,23 @@
+{
+  "scenario": "T02_missing_constraints",
+  "formal_acceptance": true,
+  "llm_mode": "none",
+  "model": null,
+  "note": "CLI 硬约束校验；未调用 LLM；未擅自补全 budget/deadline",
+  "cases": [
+    {
+      "name": "missing_budget",
+      "exit_code": 2,
+      "reason": "missing_constraints",
+      "llm_calls": 0,
+      "tool_calls": 0
+    },
+    {
+      "name": "missing_deadline",
+      "exit_code": 2,
+      "reason": "missing_constraints",
+      "llm_calls": 0,
+      "tool_calls": 0
+    }
+  ]
+}

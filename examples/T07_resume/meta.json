@@ -1,0 +1,69 @@
+{
+  "scenario": "T07_resume",
+  "formal_acceptance": true,
+  "llm_mode": "real",
+  "model": "deepseek-flash",
+  "run_id": "20261029T063911Z_f3475a09",
+  "linked_sessions": [
+    1,
+    2
+  ],
+  "command_session1": "content-agent run --topic 续跑测试夏季新品 --budget 15 --deadline 2026-11-20 --today 2026-11-01 --inject-failure save_plan:always --llm real",
+  "command_session2": "content-agent run --resume 20261029T063911Z_f3475a09 --llm real",
+  "note": "session1 保存三次注入失败后 incomplete；session2 清除注入后续跑。检索/脚本/估算真实执行次数保持为1；因 s4 已达单步尝试上限，模型新建保存步骤后完成。失败 attempts 保留。",
+  "summary": {
+    "run_id": "20261029T063911Z_f3475a09",
+    "session1": {
+      "status": "incomplete",
+      "reason": "方案本身可行（图文形式，成本8≤预算15，完成日2026-11-04≤截止2026-11-20），但 save_plan 连续3次返回可重试的 STORAGE_ERROR（存储服务故障），方案未能落盘，属工具故障而非业务不可行。",
+      "exec": {
+        "search_materials": 1,
+        "generate_script": 1,
+        "estimate_cost": 1,
+        "save_plan": 3
+      },
+      "steps": {
+        "s1": "succeeded",
+        "s2": "succeeded",
+        "s3": "succeeded",
+        "s4": "failed"
+      }
+    },
+    "session2": {
+      "status": "completed",
+      "session": 2,
+      "exec": {
+        "search_materials": 1,
+        "generate_script": 1,
+        "estimate_cost": 1,
+        "save_plan": 4
+      },
+      "saved": {
+        "plan_id": "plan_20261029T063953Z_24d35723",
+        "path": "saved_plans\\plan_20261029T063953Z_24d35723.json",
+        "fingerprint": "8f6e13d49d6dd6ff8e653155050c47a1389765c3f1024e86b7ede9e5b4aa47ff",
+        "duplicate": false,
+        "artifact_id": "plan_20261029T063953Z_24d35723",
+        "total_cost": 8,
+        "total_days": 3,
+        "finish_date": "2026-11-04",
+        "script_id": "script_8f3440994c",
+        "estimate_id": "est_ed977c0f8e"
+      }
+    },
+    "no_reexec_search_script_estimate": true,
+    "save_steps": {
+      "s4": {
+        "status": "failed",
+        "attempts": 4,
+        "ok_attempts": 0
+      },
+      "s5": {
+        "status": "succeeded",
+        "attempts": 1,
+        "ok_attempts": 1
+      }
+    },
+    "failure_history_kept": true
+  }
+}

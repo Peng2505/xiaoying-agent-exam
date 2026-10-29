@@ -1,0 +1,35 @@
+{
+  "topic": "夏季新品发布",
+  "budget": 15,
+  "deadline": "2026-11-20",
+  "today": "2026-11-01",
+  "format": "video_basic",
+  "material_ids": [
+    "M001",
+    "M002",
+    "M003",
+    "M006"
+  ],
+  "resource_items": [
+    "copywriting",
+    "stock_footage",
+    "basic_editing",
+    "voiceover"
+  ],
+  "total_cost": 10,
+  "total_days": 4,
+  "finish_date": "2026-11-05",
+  "script_id": "script_385e61e2bd",
+  "estimate_id": "est_1ef20cf9f2",
+  "outline": [
+    "主题：夏季新品发布",
+    "形式：基础视频：使用正版素材库画面，基础剪辑与配音",
+    "开场：引出活动主题与目标受众",
+    "主体：结合素材展示卖点 —— 夏季新品开箱实拍片段, 新品卖点信息图, 用户好评截图合集, 品牌口号与标准字",
+    "结尾：行动号召与活动截止提醒"
+  ],
+  "run_id": "20261029T051844Z_fcfd5516",
+  "plan_id": "plan_20261029T051853Z_6dd1a985",
+  "fingerprint": "f42a4863b9c32b0497b0cef5e8175c0e4f46eccd341cffaa687c997a15758f3f",
+  "saved_at": "2026-10-29T05:18:53.573159+00:00"
+}

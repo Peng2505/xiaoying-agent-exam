@@ -1,0 +1,27 @@
+{
+  "_note": "合成数据。费用为整数模拟单位，耗时单位为天，按资源条目顺序串行累加。",
+  "resources": {
+    "copywriting":   {"name": "脚本文案撰写", "cost": 2, "days": 1},
+    "location_shoot": {"name": "实景拍摄",    "cost": 5, "days": 2},
+    "stock_footage": {"name": "正版素材采购", "cost": 3, "days": 1},
+    "pro_editing":   {"name": "专业剪辑包装", "cost": 3, "days": 1},
+    "voiceover":     {"name": "配音",         "cost": 2, "days": 1},
+    "basic_editing": {"name": "基础剪辑",     "cost": 3, "days": 1},
+    "visual_design": {"name": "图文视觉设计", "cost": 4, "days": 1},
+    "layout":        {"name": "排版与校对",   "cost": 2, "days": 1}
+  },
+  "formats": {
+    "video_premium": {
+      "description": "高质量视频：实景拍摄、专业剪辑与配音，画面质感最好",
+      "resources": ["copywriting", "location_shoot", "pro_editing", "voiceover"]
+    },
+    "video_basic": {
+      "description": "基础视频：使用正版素材库画面，基础剪辑与配音",
+      "resources": ["copywriting", "stock_footage", "basic_editing", "voiceover"]
+    },
+    "graphic": {
+      "description": "图文长图/海报组：视觉设计加排版，适合社交平台传播",
+      "resources": ["copywriting", "visual_design", "layout"]
+    }
+  }
+}

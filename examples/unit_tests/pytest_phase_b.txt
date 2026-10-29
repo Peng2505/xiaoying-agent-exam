@@ -1,0 +1,61 @@
+============================= test session starts =============================
+platform win32 -- Python 3.11.5, pytest-9.2.0, pluggy-1.7.0 -- <VENV_PYTHON>
+cachedir: .pytest_cache
+rootdir: <PROJECT_ROOT>
+configfile: pyproject.toml
+testpaths: tests
+plugins: anyio-4.15.1
+collecting ... collected 50 items
+
+tests/test_cli_validation.py::test_missing_budget_is_rejected_without_llm PASSED [  2%]
+tests/test_cli_validation.py::test_missing_deadline_is_rejected_without_llm PASSED [  4%]
+tests/test_cli_validation.py::test_missing_both_lists_both_and_does_not_fill_defaults PASSED [  6%]
+tests/test_cli_validation.py::test_blank_budget_counts_as_missing PASSED [  8%]
+tests/test_cli_validation.py::test_invalid_budget[abc] PASSED            [ 10%]
+tests/test_cli_validation.py::test_invalid_budget[10.5] PASSED           [ 12%]
+tests/test_cli_validation.py::test_invalid_budget[0] PASSED              [ 14%]
+tests/test_cli_validation.py::test_invalid_budget[-3] PASSED             [ 16%]
+tests/test_cli_validation.py::test_invalid_deadline_format PASSED        [ 18%]
+tests/test_cli_validation.py::test_deadline_in_past_is_rejected PASSED   [ 20%]
+tests/test_cli_validation.py::test_valid_constraints_are_parsed PASSED   [ 22%]
+tests/test_cli_validation.py::test_failure_spec_accepted[search_materials:1] PASSED [ 24%]
+tests/test_cli_validation.py::test_failure_spec_accepted[save_plan:always] PASSED [ 26%]
+tests/test_cli_validation.py::test_failure_spec_accepted[generate_script:3] PASSED [ 28%]
+tests/test_cli_validation.py::test_failure_spec_rejected[unknown_tool:1] PASSED [ 30%]
+tests/test_cli_validation.py::test_failure_spec_rejected[save_plan] PASSED [ 32%]
+tests/test_cli_validation.py::test_failure_spec_rejected[save_plan:0] PASSED [ 34%]
+tests/test_cli_validation.py::test_failure_spec_rejected[save_plan:x] PASSED [ 36%]
+tests/test_costs_and_deadline.py::test_format_cost_totals PASSED         [ 38%]
+tests/test_costs_and_deadline.py::test_finish_date_is_today_plus_days PASSED [ 40%]
+tests/test_data_files.py::test_every_format_resource_exists_in_cost_table PASSED [ 42%]
+tests/test_data_files.py::test_format_totals_match_design PASSED         [ 44%]
+tests/test_data_files.py::test_material_ids_are_unique_across_sources PASSED [ 46%]
+tests/test_failure_injection.py::test_inject_nth_execution PASSED        [ 48%]
+tests/test_failure_injection.py::test_guard_reject_does_not_count_as_execution PASSED [ 50%]
+tests/test_failure_injection.py::test_reuse_does_not_count_as_execution PASSED [ 52%]
+tests/test_failure_injection.py::test_always_inject_and_retry_exhausted PASSED [ 54%]
+tests/test_guards.py::test_dependency_blocks_early_tool PASSED           [ 56%]
+tests/test_guards.py::test_step_must_be_in_plan PASSED                   [ 58%]
+tests/test_guards.py::test_cannot_delete_succeeded_step PASSED           [ 60%]
+tests/test_guards.py::test_save_plan_must_depend_on_estimate PASSED      [ 62%]
+tests/test_guards.py::test_cycle_rejected PASSED                         [ 64%]
+tests/test_guards.py::test_finish_completed_requires_successful_save PASSED [ 66%]
+tests/test_guards.py::test_finish_incomplete_always_accepted PASSED      [ 68%]
+tests/test_guards.py::test_replan_can_replace_failed_or_pending_but_keeps_succeeded PASSED [ 70%]
+tests/test_state_persistence.py::test_failure_history_kept_after_success PASSED [ 72%]
+tests/test_state_persistence.py::test_persist_and_reload PASSED          [ 74%]
+tests/test_state_persistence.py::test_succeeded_step_reused_without_reexecution PASSED [ 76%]
+tests/test_store_idempotency.py::test_fingerprint_ignores_topic_alone PASSED [ 78%]
+tests/test_store_idempotency.py::test_duplicate_save_same_run PASSED     [ 80%]
+tests/test_store_idempotency.py::test_duplicate_across_runs_same_store PASSED [ 82%]
+tests/test_store_idempotency.py::test_different_plan_content_saves_again PASSED [ 84%]
+tests/test_tools.py::test_normal_tool_chain_and_save PASSED              [ 86%]
+tests/test_tools.py::test_search_no_match PASSED                         [ 88%]
+tests/test_tools.py::test_generate_script_rejects_unknown_material PASSED [ 90%]
+tests/test_tools.py::test_estimate_unknown_script PASSED                 [ 92%]
+tests/test_tools.py::test_estimate_reports_budget_overrun_but_still_returns_ok PASSED [ 94%]
+tests/test_tools.py::test_save_rejects_budget_overrun PASSED             [ 96%]
+tests/test_tools.py::test_save_rejects_deadline_miss PASSED              [ 98%]
+tests/test_tools.py::test_save_rejects_mismatched_estimate PASSED        [100%]
+
+============================= 50 passed in 0.30s ==============================

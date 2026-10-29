@@ -1,0 +1,12 @@
+{
+  "scenario": "T04_exploratory",
+  "llm_mode": "real",
+  "model": "deepseek-flash",
+  "base_url_host": "api.deepseek.com",
+  "thinking": "disabled",
+  "timestamp": "2026-10-29T05:20:19.349009+00:00",
+  "formal_acceptance": false,
+  "command": "content-agent run --topic \"希望做高质量视频的夏季新品发布\" --budget 10 --deadline 2026-11-20 --today 2026-11-01 --llm real",
+  "run_id": "20261029T051942Z_2b3c94d3",
+  "observed": "video_premium estimate 12 within_budget=false then replan to video_basic 10 and save"
+}

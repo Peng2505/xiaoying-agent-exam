@@ -1,0 +1,32 @@
+{
+  "topic": "夏季新品发布",
+  "budget": 15,
+  "deadline": "2026-11-20",
+  "today": "2026-11-01",
+  "format": "video_basic",
+  "material_ids": [
+    "B101"
+  ],
+  "resource_items": [
+    "copywriting",
+    "stock_footage",
+    "basic_editing",
+    "voiceover"
+  ],
+  "total_cost": 10,
+  "total_days": 4,
+  "finish_date": "2026-11-05",
+  "script_id": "script_f8aa7ef770",
+  "estimate_id": "est_5d33a5cd73",
+  "outline": [
+    "主题：夏季新品发布",
+    "形式：基础视频：使用正版素材库画面，基础剪辑与配音",
+    "开场：引出活动主题与目标受众",
+    "主体：结合素材展示卖点 —— 通用新品发布模板画面",
+    "结尾：行动号召与活动截止提醒"
+  ],
+  "run_id": "20261029T063028Z_f62df26c",
+  "plan_id": "plan_20261029T063039Z_587e8dee",
+  "fingerprint": "20d1cdd9c942054c3443e60a4d274ce1ec863b324ca967cd083aec72b38bdff8",
+  "saved_at": "2026-10-29T06:30:39.041658+00:00"
+}

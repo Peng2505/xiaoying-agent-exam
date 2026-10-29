@@ -1,0 +1,34 @@
+{
+  "scenario": "T06_idempotent",
+  "formal_acceptance": true,
+  "llm_mode": "real",
+  "model": "deepseek-flash",
+  "base_url_host": "api.deepseek.com",
+  "thinking": "disabled",
+  "timestamp": "2026-10-29T06:39:10.292218+00:00",
+  "command": "content-agent run --topic 幂等测试活动夏季新品 --budget 15 --deadline 2026-11-20 --today 2026-11-01 --llm real (run1+run2)",
+  "run_id": "20261029T063814Z_2a32fec4",
+  "note": "run1 duplicate=false 新建文件；run2 同指纹 duplicate=true 复用同一 plan_id；saved_plans 仅 +1",
+  "status": "completed",
+  "reason": null,
+  "total_cost": 8,
+  "comparison": {
+    "run1": {
+      "run_id": "20261029T063814Z_2a32fec4",
+      "plan_id": "plan_20261029T063833Z_f8267f59",
+      "duplicate": false,
+      "fingerprint": "92144148901dde7af6fb024f52f926bab750f3f34b51be65d46c51c4c6c3e28a",
+      "total_cost": 8
+    },
+    "run2": {
+      "run_id": "20261029T063837Z_c5679496",
+      "plan_id": "plan_20261029T063833Z_f8267f59",
+      "duplicate": true,
+      "fingerprint": "92144148901dde7af6fb024f52f926bab750f3f34b51be65d46c51c4c6c3e28a",
+      "total_cost": 8
+    },
+    "same_fingerprint": true,
+    "same_plan_id": true
+  },
+  "plans_delta_note": "第二次运行 duplicate=true，未新增 plan 文件"
+}

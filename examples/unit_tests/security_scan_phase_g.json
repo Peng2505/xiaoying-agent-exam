@@ -1,0 +1,15 @@
+{
+  "files_scanned": 124,
+  "hits": [
+    {
+      "file": "README.md",
+      "issue": "env_key_assignment",
+      "snippet": "LLM_API_KEY=你的密钥"
+    },
+    {
+      "file": ".env.example",
+      "issue": "env_key_assignment",
+      "snippet": "LLM_API_KEY=\nLLM_BASE_URL=https://api.deepseek.com"
+    }
+  ]
+}

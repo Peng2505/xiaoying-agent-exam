@@ -1,0 +1,11 @@
+{
+  "note": "不修改原有 report/trace。补充确定性证明：data/costs.json 穷举全部 format 后全局最低成本为 8（graphic），预算 5 < 8，故 globally_infeasible_by_budget=true。原报告 gap 来自已观察估算（min_observed_cost=8, budget_gap=3），与全局最低成本一致。",
+  "global_costs_per_format": {
+    "video_premium": 12,
+    "video_basic": 10,
+    "graphic": 8
+  },
+  "global_min_cost": 8,
+  "budget": 5,
+  "globally_infeasible_by_budget": true
+}

@@ -1,0 +1,32 @@
+============================= test session starts =============================
+platform win32 -- Python 3.11.5, pytest-9.2.0, pluggy-1.7.0 -- <VENV_PYTHON>
+cachedir: .pytest_cache
+rootdir: <PROJECT_ROOT>
+configfile: pyproject.toml
+testpaths: tests
+plugins: anyio-4.15.1
+collecting ... collected 21 items
+
+tests/test_cli_validation.py::test_missing_budget_is_rejected_without_llm PASSED [  4%]
+tests/test_cli_validation.py::test_missing_deadline_is_rejected_without_llm PASSED [  9%]
+tests/test_cli_validation.py::test_missing_both_lists_both_and_does_not_fill_defaults PASSED [ 14%]
+tests/test_cli_validation.py::test_blank_budget_counts_as_missing PASSED [ 19%]
+tests/test_cli_validation.py::test_invalid_budget[abc] PASSED            [ 23%]
+tests/test_cli_validation.py::test_invalid_budget[10.5] PASSED           [ 28%]
+tests/test_cli_validation.py::test_invalid_budget[0] PASSED              [ 33%]
+tests/test_cli_validation.py::test_invalid_budget[-3] PASSED             [ 38%]
+tests/test_cli_validation.py::test_invalid_deadline_format PASSED        [ 42%]
+tests/test_cli_validation.py::test_deadline_in_past_is_rejected PASSED   [ 47%]
+tests/test_cli_validation.py::test_valid_constraints_are_parsed PASSED   [ 52%]
+tests/test_cli_validation.py::test_failure_spec_accepted[search_materials:1] PASSED [ 57%]
+tests/test_cli_validation.py::test_failure_spec_accepted[save_plan:always] PASSED [ 61%]
+tests/test_cli_validation.py::test_failure_spec_accepted[generate_script:3] PASSED [ 66%]
+tests/test_cli_validation.py::test_failure_spec_rejected[unknown_tool:1] PASSED [ 71%]
+tests/test_cli_validation.py::test_failure_spec_rejected[save_plan] PASSED [ 76%]
+tests/test_cli_validation.py::test_failure_spec_rejected[save_plan:0] PASSED [ 80%]
+tests/test_cli_validation.py::test_failure_spec_rejected[save_plan:x] PASSED [ 85%]
+tests/test_data_files.py::test_every_format_resource_exists_in_cost_table PASSED [ 90%]
+tests/test_data_files.py::test_format_totals_match_design PASSED         [ 95%]
+tests/test_data_files.py::test_material_ids_are_unique_across_sources PASSED [100%]
+
+============================= 21 passed in 0.05s ==============================

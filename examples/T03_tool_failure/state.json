@@ -1,0 +1,403 @@
+{
+  "run_id": "20261029T063028Z_f62df26c",
+  "topic": "夏季新品发布",
+  "budget": 15,
+  "deadline": "2026-11-20",
+  "today": "2026-11-01",
+  "steps": {
+    "s1": {
+      "step_id": "s1",
+      "name": "检索夏季新品发布主题素材（主源）",
+      "tool": "search_materials",
+      "depends_on": [],
+      "status": "succeeded",
+      "attempts": [
+        {
+          "attempt_no": 1,
+          "tool": "search_materials",
+          "args": {
+            "step_id": "s1",
+            "topic": "夏季新品发布",
+            "source": "primary",
+            "limit": 8,
+            "reason": "先使用主源检索夏季新品发布相关素材，作为脚本生成输入。"
+          },
+          "result": {
+            "ok": false,
+            "tool": "search_materials",
+            "data": null,
+            "error": {
+              "code": "SOURCE_UNAVAILABLE",
+              "message": "素材源暂时不可用（测试注入）。",
+              "retryable": true,
+              "injected": true
+            }
+          },
+          "reused": false,
+          "injected": true,
+          "timestamp": "2026-10-29T06:30:33.109369+00:00"
+        },
+        {
+          "attempt_no": 2,
+          "tool": "search_materials",
+          "args": {
+            "limit": 8,
+            "reason": "主源 SOURCE_UNAVAILABLE，切换备份源完成同一检索步骤。",
+            "source": "backup",
+            "step_id": "s1",
+            "topic": "夏季新品发布"
+          },
+          "result": {
+            "ok": true,
+            "tool": "search_materials",
+            "data": {
+              "artifact_id": "matset_5ab5fe5221",
+              "topic": "夏季新品发布",
+              "source": "backup",
+              "materials": [
+                {
+                  "id": "B101",
+                  "title": "通用新品发布模板画面",
+                  "tags": [
+                    "新品",
+                    "发布"
+                  ],
+                  "type": "video_clip"
+                }
+              ],
+              "material_ids": [
+                "B101"
+              ]
+            },
+            "error": null
+          },
+          "reused": false,
+          "injected": false,
+          "timestamp": "2026-10-29T06:30:34.535431+00:00"
+        }
+      ],
+      "artifact_id": "matset_5ab5fe5221",
+      "error": null
+    },
+    "s2": {
+      "step_id": "s2",
+      "name": "基于素材生成基础视频脚本",
+      "tool": "generate_script",
+      "depends_on": [
+        "s1"
+      ],
+      "status": "succeeded",
+      "attempts": [
+        {
+          "attempt_no": 1,
+          "tool": "generate_script",
+          "args": {
+            "format": "video_basic",
+            "material_ids": [
+              "B101"
+            ],
+            "reason": "预算仅15单位，选择基础视频形式以控制成本，基于备份源素材生成脚本。",
+            "step_id": "s2"
+          },
+          "result": {
+            "ok": true,
+            "tool": "generate_script",
+            "data": {
+              "script_id": "script_f8aa7ef770",
+              "artifact_id": "script_f8aa7ef770",
+              "format": "video_basic",
+              "material_ids": [
+                "B101"
+              ],
+              "outline": [
+                "主题：夏季新品发布",
+                "形式：基础视频：使用正版素材库画面，基础剪辑与配音",
+                "开场：引出活动主题与目标受众",
+                "主体：结合素材展示卖点 —— 通用新品发布模板画面",
+                "结尾：行动号召与活动截止提醒"
+              ],
+              "required_resources": [
+                "copywriting",
+                "stock_footage",
+                "basic_editing",
+                "voiceover"
+              ]
+            },
+            "error": null
+          },
+          "reused": false,
+          "injected": false,
+          "timestamp": "2026-10-29T06:30:36.020043+00:00"
+        }
+      ],
+      "artifact_id": "script_f8aa7ef770",
+      "error": null
+    },
+    "s3": {
+      "step_id": "s3",
+      "name": "估算成本与工期并对照预算/截止时间",
+      "tool": "estimate_cost",
+      "depends_on": [
+        "s2"
+      ],
+      "status": "succeeded",
+      "attempts": [
+        {
+          "attempt_no": 1,
+          "tool": "estimate_cost",
+          "args": {
+            "reason": "对基础视频脚本做程序化成本与工期核算，验证是否满足15单位预算与2026-11-20截止。",
+            "script_id": "script_f8aa7ef770",
+            "step_id": "s3"
+          },
+          "result": {
+            "ok": true,
+            "tool": "estimate_cost",
+            "data": {
+              "estimate_id": "est_5d33a5cd73",
+              "artifact_id": "est_5d33a5cd73",
+              "script_id": "script_f8aa7ef770",
+              "format": "video_basic",
+              "items": [
+                {
+                  "resource_id": "copywriting",
+                  "name": "脚本文案撰写",
+                  "cost": 2,
+                  "days": 1
+                },
+                {
+                  "resource_id": "stock_footage",
+                  "name": "正版素材采购",
+                  "cost": 3,
+                  "days": 1
+                },
+                {
+                  "resource_id": "basic_editing",
+                  "name": "基础剪辑",
+                  "cost": 3,
+                  "days": 1
+                },
+                {
+                  "resource_id": "voiceover",
+                  "name": "配音",
+                  "cost": 2,
+                  "days": 1
+                }
+              ],
+              "resource_items": [
+                "copywriting",
+                "stock_footage",
+                "basic_editing",
+                "voiceover"
+              ],
+              "total_cost": 10,
+              "total_days": 4,
+              "budget": 15,
+              "within_budget": true,
+              "over_by": 0,
+              "finish_date": "2026-11-05",
+              "deadline": "2026-11-20",
+              "meets_deadline": true,
+              "days_over": 0
+            },
+            "error": null
+          },
+          "reused": false,
+          "injected": false,
+          "timestamp": "2026-10-29T06:30:37.217749+00:00"
+        }
+      ],
+      "artifact_id": "est_5d33a5cd73",
+      "error": null
+    },
+    "s4": {
+      "step_id": "s4",
+      "name": "复核通过后保存方案",
+      "tool": "save_plan",
+      "depends_on": [
+        "s3"
+      ],
+      "status": "succeeded",
+      "attempts": [
+        {
+          "attempt_no": 1,
+          "tool": "save_plan",
+          "args": {
+            "estimate_id": "est_5d33a5cd73",
+            "reason": "估算显示成本10单位在15预算内、4天工期满足截止时间，复核通过后落盘方案。",
+            "script_id": "script_f8aa7ef770",
+            "step_id": "s4"
+          },
+          "result": {
+            "ok": true,
+            "tool": "save_plan",
+            "data": {
+              "plan_id": "plan_20261029T063039Z_587e8dee",
+              "path": "saved_plans\\plan_20261029T063039Z_587e8dee.json",
+              "fingerprint": "20d1cdd9c942054c3443e60a4d274ce1ec863b324ca967cd083aec72b38bdff8",
+              "duplicate": false,
+              "artifact_id": "plan_20261029T063039Z_587e8dee",
+              "total_cost": 10,
+              "total_days": 4,
+              "finish_date": "2026-11-05",
+              "script_id": "script_f8aa7ef770",
+              "estimate_id": "est_5d33a5cd73"
+            },
+            "error": null
+          },
+          "reused": false,
+          "injected": false,
+          "timestamp": "2026-10-29T06:30:39.043657+00:00"
+        }
+      ],
+      "artifact_id": "plan_20261029T063039Z_587e8dee",
+      "error": null
+    }
+  },
+  "step_order": [
+    "s1",
+    "s2",
+    "s3",
+    "s4"
+  ],
+  "artifacts": {
+    "materials": {
+      "matset_5ab5fe5221": {
+        "artifact_id": "matset_5ab5fe5221",
+        "topic": "夏季新品发布",
+        "source": "backup",
+        "materials": [
+          {
+            "id": "B101",
+            "title": "通用新品发布模板画面",
+            "tags": [
+              "新品",
+              "发布"
+            ],
+            "type": "video_clip"
+          }
+        ],
+        "material_ids": [
+          "B101"
+        ]
+      },
+      "B101": {
+        "id": "B101",
+        "title": "通用新品发布模板画面",
+        "tags": [
+          "新品",
+          "发布"
+        ],
+        "type": "video_clip",
+        "from_set": "matset_5ab5fe5221",
+        "source": "backup"
+      }
+    },
+    "scripts": {
+      "script_f8aa7ef770": {
+        "script_id": "script_f8aa7ef770",
+        "artifact_id": "script_f8aa7ef770",
+        "format": "video_basic",
+        "material_ids": [
+          "B101"
+        ],
+        "outline": [
+          "主题：夏季新品发布",
+          "形式：基础视频：使用正版素材库画面，基础剪辑与配音",
+          "开场：引出活动主题与目标受众",
+          "主体：结合素材展示卖点 —— 通用新品发布模板画面",
+          "结尾：行动号召与活动截止提醒"
+        ],
+        "required_resources": [
+          "copywriting",
+          "stock_footage",
+          "basic_editing",
+          "voiceover"
+        ]
+      }
+    },
+    "estimates": {
+      "est_5d33a5cd73": {
+        "estimate_id": "est_5d33a5cd73",
+        "artifact_id": "est_5d33a5cd73",
+        "script_id": "script_f8aa7ef770",
+        "format": "video_basic",
+        "items": [
+          {
+            "resource_id": "copywriting",
+            "name": "脚本文案撰写",
+            "cost": 2,
+            "days": 1
+          },
+          {
+            "resource_id": "stock_footage",
+            "name": "正版素材采购",
+            "cost": 3,
+            "days": 1
+          },
+          {
+            "resource_id": "basic_editing",
+            "name": "基础剪辑",
+            "cost": 3,
+            "days": 1
+          },
+          {
+            "resource_id": "voiceover",
+            "name": "配音",
+            "cost": 2,
+            "days": 1
+          }
+        ],
+        "resource_items": [
+          "copywriting",
+          "stock_footage",
+          "basic_editing",
+          "voiceover"
+        ],
+        "total_cost": 10,
+        "total_days": 4,
+        "budget": 15,
+        "within_budget": true,
+        "over_by": 0,
+        "finish_date": "2026-11-05",
+        "deadline": "2026-11-20",
+        "meets_deadline": true,
+        "days_over": 0
+      }
+    },
+    "plans": {
+      "plan_20261029T063039Z_587e8dee": {
+        "plan_id": "plan_20261029T063039Z_587e8dee",
+        "path": "saved_plans\\plan_20261029T063039Z_587e8dee.json",
+        "fingerprint": "20d1cdd9c942054c3443e60a4d274ce1ec863b324ca967cd083aec72b38bdff8",
+        "duplicate": false,
+        "artifact_id": "plan_20261029T063039Z_587e8dee",
+        "total_cost": 10,
+        "total_days": 4,
+        "finish_date": "2026-11-05",
+        "script_id": "script_f8aa7ef770",
+        "estimate_id": "est_5d33a5cd73"
+      }
+    }
+  },
+  "status": "completed",
+  "reason": null,
+  "message": "夏季新品发布内容活动方案已完成并保存。形式：基础视频（正版素材库画面+基础剪辑配音）。素材：主源不可用后切换备份源，取得素材 B101（通用新品发布模板画面）。脚本 script_f8aa7ef770，结构为开场引出主题与受众→主体展示卖点→结尾行动号召与截止提醒。成本明细：文案2+素材3+剪辑3+配音2=10单位（预算15，余5）；工期4天，预计2026-11-05完成，满足2026-11-20截止。方案ID：plan_20261029T063039Z_587e8dee。",
+  "gap": null,
+  "steps_used": 7,
+  "cumulative_steps": 7,
+  "session": 1,
+  "max_steps": 12,
+  "max_attempts_per_step": 3,
+  "inject_failures": {
+    "search_materials": "1"
+  },
+  "execution_counts": {
+    "search_materials": 2,
+    "generate_script": 1,
+    "estimate_cost": 1,
+    "save_plan": 1
+  },
+  "created_at": "2026-10-29T06:30:28.133462+00:00",
+  "updated_at": "2026-10-29T06:30:41.384999+00:00"
+}

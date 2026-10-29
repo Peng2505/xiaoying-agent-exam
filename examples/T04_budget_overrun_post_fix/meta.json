@@ -1,0 +1,17 @@
+{
+  "scenario": "T04_budget_overrun_post_fix",
+  "formal_acceptance": true,
+  "llm_mode": "real",
+  "model": "deepseek-flash",
+  "base_url_host": "api.deepseek.com",
+  "thinking": "disabled",
+  "timestamp": "2026-10-29T10:55:09.400704+00:00",
+  "command": "content-agent run --topic 希望做高质量视频的夏季新品发布 --budget 10 --deadline 2026-11-20 --today 2026-11-01 --llm real",
+  "run_id": "20261029T105429Z_ea82aee8",
+  "note": "独立审查修复后真实重跑：video_premium=12 超限后重规划 video_basic=10；不覆盖原 T04 证据",
+  "status": "completed",
+  "reason": null,
+  "total_cost": 10,
+  "post_fix_verification": true,
+  "does_not_overwrite": "examples/T04_budget_overrun/"
+}

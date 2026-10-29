@@ -1,0 +1,20 @@
+{
+  "_note": "合成素材库。search_materials 按 tags 与主题文本的包含关系匹配；primary 为主素材库，backup 为备用素材库。",
+  "sources": {
+    "primary": [
+      {"id": "M001", "title": "夏季新品开箱实拍片段", "type": "video_clip", "tags": ["夏季", "新品", "开箱"]},
+      {"id": "M002", "title": "新品卖点信息图", "type": "image", "tags": ["新品", "卖点", "发布"]},
+      {"id": "M003", "title": "用户好评截图合集", "type": "image", "tags": ["口碑", "好评", "新品"]},
+      {"id": "M004", "title": "门店促销活动照片", "type": "image", "tags": ["促销", "门店", "折扣"]},
+      {"id": "M005", "title": "节日氛围背景音乐", "type": "audio", "tags": ["节日", "双十一", "春节"]},
+      {"id": "M006", "title": "品牌口号与标准字", "type": "brand", "tags": ["品牌", "发布", "新品"]},
+      {"id": "M007", "title": "秋冬上新模特图", "type": "image", "tags": ["秋冬", "上新", "服饰"]},
+      {"id": "M008", "title": "双十一大促倒计时素材", "type": "image", "tags": ["双十一", "促销", "倒计时"]}
+    ],
+    "backup": [
+      {"id": "B101", "title": "通用新品发布模板画面", "type": "video_clip", "tags": ["新品", "发布"]},
+      {"id": "B102", "title": "通用促销海报底图", "type": "image", "tags": ["促销", "折扣"]},
+      {"id": "B103", "title": "通用节日贴纸包", "type": "image", "tags": ["节日", "双十一"]}
+    ]
+  }
+}
