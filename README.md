@@ -16,6 +16,34 @@
 CLI → Agent 循环 → LLM(tool_calls) → ToolExecutor → guards/tools → 观察回传 LLM
 ```
 
+## 运行效果展示
+
+以下为真实 DeepSeek（`--llm real`）CLI 运行截图。点击图片可查看原图。
+
+### 1. T01 正常任务规划
+
+预算充足时，Agent 依次完成素材检索、脚本大纲生成、成本估算与方案保存，一次跑通。
+
+<a href="docs/images/01-normal-run.png">
+  <img src="docs/images/01-normal-run.png" alt="T01 正常任务规划：预算 15，video_basic 费用 10，status=completed" width="720" />
+</a>
+
+### 2. T04 预算超限后自主调整计划
+
+偏好高质量视频时，估算出现费用 12、差额 2（模拟单位）超出预算；模型根据观察调用 `update_plan`，保留已成功检索，改走基础视频路径（动态重规划，非固定分支）。
+
+<a href="docs/images/02-budget-replanning.png">
+  <img src="docs/images/02-budget-replanning.png" alt="T04 预算超限后动态重规划：video_premium=12 超限后改 video_basic" width="720" />
+</a>
+
+### 3. T04 重规划后成功保存方案
+
+最终方案形式为 `video_basic`，合计费用 10 模拟单位、工期 4 天、预计完成 2026-11-05；原超限保存步骤已废弃，新路径保存成功并给出 `plan_id`。
+
+<a href="docs/images/03-replanning-result.png">
+  <img src="docs/images/03-replanning-result.png" alt="T04 重规划结果：费用 10、工期 4 天、方案已保存" width="720" />
+</a>
+
 ## 环境安装
 
 ```powershell
