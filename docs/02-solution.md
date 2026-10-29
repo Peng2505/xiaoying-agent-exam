@@ -6,13 +6,14 @@
 
 | 模块 | 职责 |
 | --- | --- |
-| `cli.py` | 参数、缺约束拒绝、`--resume` |
+| `cli.py` | 参数、缺约束拒绝、`--resume`；默认中文报告，`--output json` / `--verbose` |
+| `display.py` | 人类可读报告与进度文案（数据来自真实 report/state） |
 | `llm.py` | OpenAI 兼容客户端；DeepSeek `thinking.disabled`；Mock 仅流程 |
-| `agent.py` | 决策循环、步数/累计上限、消息协议 |
+| `agent.py` | 决策循环、步数/累计上限、消息协议；可选进度回调 |
 | `executor.py` | 调度：守卫 → 复用/执行 → `record_attempt` → 落盘 |
-| `guards.py` | 计划/依赖/复用参数比对/`finish`/`compute_gap` |
+| `guards.py` | 计划/依赖/save 血缘/`finish` 计划一致性/`compute_gap` |
 | `tools.py` | 四个业务工具 + 失败注入计数 |
-| `store.py` | 指纹幂等保存 |
+| `store.py` | 指纹幂等保存（含规范化 outline） |
 | `state.py` / `trace.py` | 状态与 JSONL Trace |
 
 ## 2. 动态决策循环
@@ -35,8 +36,8 @@
 | `search_materials` | primary/backup；注入 `SOURCE_UNAVAILABLE` |
 | `generate_script` | format 三选一；工具描述不暴露价格 |
 | `estimate_cost` | 代码算费用；`within_budget` 为观察 |
-| `save_plan` | 重算后校验；指纹幂等 |
-| `update_plan` / `finish` | 控制工具；`finish(completed)` 需已保存 |
+| `save_plan` | 重算后校验；指纹幂等；**script/estimate 必须来自当前依赖链成功步骤** |
+| `update_plan` / `finish` | 控制工具；`finish(completed)` 要求当前有效计划全部必需步骤成功且存在有效 save；`optional`/`superseded` 不阻碍 |
 
 ## 4. 状态与恢复
 

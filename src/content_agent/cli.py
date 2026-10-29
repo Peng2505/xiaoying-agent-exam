@@ -1,6 +1,7 @@
 """命令行入口：解析参数、确定性校验关键约束，再交给 Agent 循环。
 
 缺少预算或截止时间属于硬约束问题，在这里直接拒绝，不调用 LLM，也不填默认值。
+默认输出人类可读中文报告；`--output json` 输出完整机器可读 JSON。
 """
 
 from __future__ import annotations
@@ -14,6 +15,7 @@ from typing import Any
 
 from content_agent.agent import ContentAgent
 from content_agent.config import BUSINESS_TOOLS, load_settings
+from content_agent.display import emit_progress, format_text_report
 from content_agent.executor import ToolExecutor
 from content_agent.llm import build_llm
 from content_agent.state import RUN_COMPLETED, RunState, load_state, prepare_resume
@@ -143,11 +145,51 @@ def build_parser() -> argparse.ArgumentParser:
         default="real",
         help="real 使用真实模型；mock 仅验证流程，不能作为模型决策证据",
     )
+    run.add_argument(
+        "--output",
+        choices=("text", "json"),
+        default="text",
+        help="text=默认中文可读报告；json=完整机器可读报告（测试/归档用）",
+    )
+    run.add_argument(
+        "--verbose",
+        action="store_true",
+        help="在 stderr 打印工具执行进度；与 --output json 并用时 stdout 仍为纯 JSON",
+    )
     return parser
 
 
 def _print_json(payload: dict[str, Any]) -> None:
     print(json.dumps(payload, ensure_ascii=False, indent=2, default=str))
+
+
+def _emit_result(
+    payload: dict[str, Any],
+    *,
+    output: str,
+    state: RunState | None = None,
+) -> None:
+    if output == "json":
+        _print_json(payload)
+        return
+    # 缺约束等早期拒绝没有完整 plan 时，仍用简洁中文
+    if state is None and payload.get("reason") in ("missing_constraints", "invalid_constraints"):
+        print("=" * 56)
+        print("内容任务规划 Agent · 输入校验")
+        print("=" * 56)
+        print(f"最终状态：incomplete（未完成）")
+        print(f"原因码：{payload.get('reason')}")
+        print(f"说明：{payload.get('message')}")
+        if payload.get("missing"):
+            print(f"缺少字段：{', '.join(payload['missing'])}")
+        print("未调用 LLM，未擅自补全约束。")
+        print("=" * 56)
+        return
+    if state is None:
+        # 配置错误等
+        print(payload.get("message") or json.dumps(payload, ensure_ascii=False))
+        return
+    print(format_text_report(payload, state))
 
 
 def _use_utf8_output() -> None:
@@ -156,12 +198,18 @@ def _use_utf8_output() -> None:
             stream.reconfigure(encoding="utf-8")
 
 
-def _build_stack(settings, llm_mode: str):
+def _build_stack(settings, llm_mode: str, *, verbose: bool = False):
     runtime = ToolRuntime(data_dir=settings.data_dir, plans_dir=settings.plans_dir)
     executor = ToolExecutor(runtime=runtime, runs_dir=settings.runs_dir)
-    # mock 默认 CompletePathMockLLM（完整确定性成功路径）；仍标记 llm_mode=mock，非真实决策证据
     llm = build_llm(settings, mode=llm_mode, mock_script=None)
-    agent = ContentAgent(llm=llm, executor=executor, runtime=runtime, runs_dir=settings.runs_dir)
+    on_progress = emit_progress if verbose else None
+    agent = ContentAgent(
+        llm=llm,
+        executor=executor,
+        runtime=runtime,
+        runs_dir=settings.runs_dir,
+        on_progress=on_progress,
+    )
     return agent
 
 
@@ -169,6 +217,8 @@ def main(argv: list[str] | None = None) -> int:
     _use_utf8_output()
     args = build_parser().parse_args(argv)
     settings = load_settings()
+    output_mode = getattr(args, "output", "text")
+    verbose = bool(getattr(args, "verbose", False))
 
     inject = {tool: when for tool, when in args.inject_failure}
     max_steps = args.max_steps if args.max_steps is not None else settings.max_steps
@@ -177,18 +227,18 @@ def main(argv: list[str] | None = None) -> int:
         try:
             state = load_state(args.resume, settings.runs_dir)
         except FileNotFoundError as exc:
-            _print_json({"status": "error", "message": str(exc)})
+            _emit_result({"status": "error", "message": str(exc)}, output=output_mode)
             return EXIT_INVALID_INPUT
         if state.status == RUN_COMPLETED:
-            _print_json(
+            _emit_result(
                 {
                     "status": "error",
                     "message": f"运行 {args.resume} 已完成，不能续跑。",
                     "run_id": args.resume,
-                }
+                },
+                output=output_mode,
             )
             return EXIT_INVALID_INPUT
-        # 续跑不允许改约束；若用户误传 topic/budget/deadline，直接拒绝以免静默忽略
         overrides = [
             name
             for name, value in (
@@ -200,21 +250,23 @@ def main(argv: list[str] | None = None) -> int:
             if value is not None and str(value).strip()
         ]
         if overrides:
-            _print_json(
+            _emit_result(
                 {
                     "status": "error",
                     "message": "续跑时约束必须来自原 state.json，请勿同时传入 "
                     + ", ".join(overrides),
-                }
+                },
+                output=output_mode,
             )
             return EXIT_INVALID_INPUT
 
         if args.llm == "real" and not settings.llm_configured:
-            _print_json(
+            _emit_result(
                 {
                     "status": "error",
                     "message": "未配置 LLM_API_KEY 或 LLM_MODEL。请复制 .env.example 为 .env 并填写。",
-                }
+                },
+                output=output_mode,
             )
             return EXIT_CONFIG_ERROR
         try:
@@ -226,25 +278,28 @@ def main(argv: list[str] | None = None) -> int:
                 clear_inject=not bool(inject),
             )
         except ValueError as exc:
-            _print_json({"status": "incomplete", "reason": "max_cumulative_steps_reached", "message": str(exc)})
+            _emit_result(
+                {"status": "incomplete", "reason": "max_cumulative_steps_reached", "message": str(exc)},
+                output=output_mode,
+            )
             return EXIT_INCOMPLETE
-        agent = _build_stack(settings, args.llm)
+        agent = _build_stack(settings, args.llm, verbose=verbose)
         report = agent.run(state, is_resume=True)
-        _print_json(report)
+        _emit_result(report, output=output_mode, state=state)
         return EXIT_COMPLETED if report.get("status") == RUN_COMPLETED else EXIT_INCOMPLETE
 
-    # 约束校验优先于 LLM 配置检查，避免缺预算时被误报成「未配置密钥」
     constraints, rejection = validate_constraints(args.topic, args.budget, args.deadline, args.today)
     if rejection:
-        _print_json(rejection)
+        _emit_result(rejection, output=output_mode)
         return EXIT_INVALID_INPUT
 
     if args.llm == "real" and not settings.llm_configured:
-        _print_json(
+        _emit_result(
             {
                 "status": "error",
                 "message": "未配置 LLM_API_KEY 或 LLM_MODEL。请复制 .env.example 为 .env 并填写。",
-            }
+            },
+            output=output_mode,
         )
         return EXIT_CONFIG_ERROR
 
@@ -259,9 +314,9 @@ def main(argv: list[str] | None = None) -> int:
         inject_failures=inject,
     )
 
-    agent = _build_stack(settings, args.llm)
+    agent = _build_stack(settings, args.llm, verbose=verbose)
     report = agent.run(state)
-    _print_json(report)
+    _emit_result(report, output=output_mode, state=state)
     return EXIT_COMPLETED if report.get("status") == RUN_COMPLETED else EXIT_INCOMPLETE
 
 

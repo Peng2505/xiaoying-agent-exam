@@ -130,7 +130,8 @@ def test_estimate_must_match_current_script_after_replan(executor, tmp_path):
         },
     )
     assert stale["ok"] is False
-    assert stale["error"]["code"] == "STALE_ESTIMATE"
+    # 旧估算不在 s7 依赖链 → 血缘校验优先；否则工具层 STALE_ESTIMATE
+    assert stale["error"]["code"] in ("DEPENDENCY_ARTIFACT_MISMATCH", "STALE_ESTIMATE")
 
 
 def test_always_inject_and_retry_exhausted(executor, tmp_path):

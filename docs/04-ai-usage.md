@@ -248,3 +248,13 @@ Cursor 主要承担代码生成、调试与测试执行；ChatGPT 主要提供�
 | 人工贡献 | 用户确认独立审查修复报告，原则上同意进入最终 GitHub 提交流程；要求不得替其在招聘考试网站点击提交。本轮仍无核实到用户亲自粘贴/手写业务代码；关键决策与审查确认归用户。用户是否在本地再次独立复跑命令，待用户自行补充第 5 节。 |
 | 验证结果 | `pytest -q`：**74 passed**（`examples/unit_tests/pytest_final_pre_commit.txt`）。T04 修复后复跑：`status=completed`，premium=12→basic=10，`llm_mode=real`（`examples/T04_budget_overrun_post_fix/`）。结构化错误与指纹手工核对通过。历史 Trace 未改写。 |
 | 未解决问题 | 考试官网最终提交须由用户本人完成。若仓库为私有，须自行添加评审账号可读权限。 |
+
+### 2026-10-29 集中优化（P0 逻辑 + CLI 展示，未 commit）
+
+| 字段 | 内容 |
+| --- | --- |
+| AI 辅助内容 | Cursor：修复 save 依赖产物血缘与 finish 计划一致性；实现默认中文报告 / `--output json` / `--verbose`；UTF-16→UTF-8 证据规范化；更新文档；全量回归与真实 T01/T04 复跑归档（不覆盖历史）。 |
+| ChatGPT | 提出本轮审查建议（save 依赖一致性、finish 状态一致性、CLI 可读性等），由用户整理后交 Cursor 实施。 |
+| 人工贡献 | 用户下达集中优化任务、确认约 4 小时用时口径、要求不自动 commit/push、完成后暂停验收。代码实现仍由 Cursor 完成。 |
+| 验证结果 | 全量 pytest **84 passed**（`examples/unit_tests/pytest_post_opt.txt`）。Mock 中文报告 / JSON+verbose 样例已落盘。真实 T01：`examples/T01_normal_post_opt/` completed、费用 8（模型选 graphic，与历史 T01 的 10 不同属非确定性）。真实 T04：`examples/T04_budget_overrun_post_opt/` completed，估算路径 premium=12→basic=10。历史 T01–T08 Trace 未覆盖。未 commit/push。 |
+| 未解决问题 | 正式二次 push 待用户验收后确认。 |

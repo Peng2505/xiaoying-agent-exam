@@ -1,0 +1,289 @@
+{
+  "run_id": "20261029T114535Z_4b8cfff1",
+  "session": 1,
+  "status": "completed",
+  "reason": null,
+  "message": "mock complete-path finished（模拟模式，非真实决策证据）",
+  "gap": null,
+  "llm_mode": "mock",
+  "model": "mock-llm-complete-path",
+  "constraints": {
+    "topic": "夏季新品发布",
+    "budget": 15,
+    "deadline": "2026-11-20",
+    "today": "2026-11-01"
+  },
+  "plan": [
+    {
+      "step_id": "s1",
+      "name": "检索素材",
+      "tool": "search_materials",
+      "depends_on": [],
+      "status": "succeeded",
+      "attempts": [
+        {
+          "attempt_no": 1,
+          "tool": "search_materials",
+          "args": {
+            "step_id": "s1",
+            "source": "primary",
+            "limit": 3,
+            "reason": "mock complete-path: search"
+          },
+          "result": {
+            "ok": true,
+            "tool": "search_materials",
+            "data": {
+              "artifact_id": "matset_0af2c339a6",
+              "topic": "夏季新品发布",
+              "source": "primary",
+              "materials": [
+                {
+                  "id": "M001",
+                  "title": "夏季新品开箱实拍片段",
+                  "tags": [
+                    "夏季",
+                    "新品",
+                    "开箱"
+                  ],
+                  "type": "video_clip"
+                },
+                {
+                  "id": "M002",
+                  "title": "新品卖点信息图",
+                  "tags": [
+                    "新品",
+                    "卖点",
+                    "发布"
+                  ],
+                  "type": "image"
+                },
+                {
+                  "id": "M003",
+                  "title": "用户好评截图合集",
+                  "tags": [
+                    "口碑",
+                    "好评",
+                    "新品"
+                  ],
+                  "type": "image"
+                }
+              ],
+              "material_ids": [
+                "M001",
+                "M002",
+                "M003"
+              ]
+            },
+            "error": null
+          },
+          "reused": false,
+          "injected": false,
+          "timestamp": "2026-10-29T11:45:35.253626+00:00"
+        }
+      ],
+      "artifact_id": "matset_0af2c339a6",
+      "error": null,
+      "optional": false
+    },
+    {
+      "step_id": "s2",
+      "name": "生成脚本",
+      "tool": "generate_script",
+      "depends_on": [
+        "s1"
+      ],
+      "status": "succeeded",
+      "attempts": [
+        {
+          "attempt_no": 1,
+          "tool": "generate_script",
+          "args": {
+            "step_id": "s2",
+            "material_ids": [
+              "M001",
+              "M002",
+              "M003"
+            ],
+            "format": "graphic",
+            "reason": "mock complete-path: generate"
+          },
+          "result": {
+            "ok": true,
+            "tool": "generate_script",
+            "data": {
+              "script_id": "script_0cfd77ca8b",
+              "artifact_id": "script_0cfd77ca8b",
+              "format": "graphic",
+              "material_ids": [
+                "M001",
+                "M002",
+                "M003"
+              ],
+              "outline": [
+                "主题：夏季新品发布",
+                "形式：图文长图/海报组：视觉设计加排版，适合社交平台传播",
+                "开场：引出活动主题与目标受众",
+                "主体：结合素材展示卖点 —— 夏季新品开箱实拍片段, 新品卖点信息图, 用户好评截图合集",
+                "结尾：行动号召与活动截止提醒"
+              ],
+              "required_resources": [
+                "copywriting",
+                "visual_design",
+                "layout"
+              ]
+            },
+            "error": null
+          },
+          "reused": false,
+          "injected": false,
+          "timestamp": "2026-10-29T11:45:35.255624+00:00"
+        }
+      ],
+      "artifact_id": "script_0cfd77ca8b",
+      "error": null,
+      "optional": false
+    },
+    {
+      "step_id": "s3",
+      "name": "估算成本",
+      "tool": "estimate_cost",
+      "depends_on": [
+        "s2"
+      ],
+      "status": "succeeded",
+      "attempts": [
+        {
+          "attempt_no": 1,
+          "tool": "estimate_cost",
+          "args": {
+            "step_id": "s3",
+            "script_id": "script_0cfd77ca8b",
+            "reason": "mock complete-path: estimate"
+          },
+          "result": {
+            "ok": true,
+            "tool": "estimate_cost",
+            "data": {
+              "estimate_id": "est_3b6c963b97",
+              "artifact_id": "est_3b6c963b97",
+              "script_id": "script_0cfd77ca8b",
+              "format": "graphic",
+              "items": [
+                {
+                  "resource_id": "copywriting",
+                  "name": "脚本文案撰写",
+                  "cost": 2,
+                  "days": 1
+                },
+                {
+                  "resource_id": "visual_design",
+                  "name": "图文视觉设计",
+                  "cost": 4,
+                  "days": 1
+                },
+                {
+                  "resource_id": "layout",
+                  "name": "排版与校对",
+                  "cost": 2,
+                  "days": 1
+                }
+              ],
+              "resource_items": [
+                "copywriting",
+                "visual_design",
+                "layout"
+              ],
+              "total_cost": 8,
+              "total_days": 3,
+              "budget": 15,
+              "within_budget": true,
+              "over_by": 0,
+              "finish_date": "2026-11-04",
+              "deadline": "2026-11-20",
+              "meets_deadline": true,
+              "days_over": 0
+            },
+            "error": null
+          },
+          "reused": false,
+          "injected": false,
+          "timestamp": "2026-10-29T11:45:35.258624+00:00"
+        }
+      ],
+      "artifact_id": "est_3b6c963b97",
+      "error": null,
+      "optional": false
+    },
+    {
+      "step_id": "s4",
+      "name": "保存方案",
+      "tool": "save_plan",
+      "depends_on": [
+        "s3"
+      ],
+      "status": "succeeded",
+      "attempts": [
+        {
+          "attempt_no": 1,
+          "tool": "save_plan",
+          "args": {
+            "step_id": "s4",
+            "script_id": "script_0cfd77ca8b",
+            "estimate_id": "est_3b6c963b97",
+            "reason": "mock complete-path: save"
+          },
+          "result": {
+            "ok": true,
+            "tool": "save_plan",
+            "data": {
+              "plan_id": "plan_20261029T104711Z_3cadc700",
+              "path": "saved_plans\\plan_20261029T104711Z_3cadc700.json",
+              "fingerprint": "30080647a34dc27a538818f6fa05a5f5fa1f1a2dac5354eccd6df46b97a86d94",
+              "duplicate": true,
+              "artifact_id": "plan_20261029T104711Z_3cadc700",
+              "total_cost": 8,
+              "total_days": 3,
+              "finish_date": "2026-11-04",
+              "script_id": "script_0cfd77ca8b",
+              "estimate_id": "est_3b6c963b97"
+            },
+            "error": null
+          },
+          "reused": false,
+          "injected": false,
+          "timestamp": "2026-10-29T11:45:35.260624+00:00"
+        }
+      ],
+      "artifact_id": "plan_20261029T104711Z_3cadc700",
+      "error": null,
+      "optional": false
+    }
+  ],
+  "tool_execution_counts": {
+    "search_materials": 1,
+    "generate_script": 1,
+    "estimate_cost": 1,
+    "save_plan": 1
+  },
+  "steps_used": 6,
+  "cumulative_steps": 6,
+  "max_steps": 12,
+  "max_cumulative_steps": 36,
+  "total_cost": 8,
+  "cost_note": "已保存方案复核费用",
+  "saved_plan": {
+    "plan_id": "plan_20261029T104711Z_3cadc700",
+    "path": "saved_plans\\plan_20261029T104711Z_3cadc700.json",
+    "fingerprint": "30080647a34dc27a538818f6fa05a5f5fa1f1a2dac5354eccd6df46b97a86d94",
+    "duplicate": true,
+    "artifact_id": "plan_20261029T104711Z_3cadc700",
+    "total_cost": 8,
+    "total_days": 3,
+    "finish_date": "2026-11-04",
+    "script_id": "script_0cfd77ca8b",
+    "estimate_id": "est_3b6c963b97"
+  },
+  "trace_path": "runs\\20261029T114535Z_4b8cfff1\\trace.jsonl",
+  "state_path": "runs\\20261029T114535Z_4b8cfff1\\state.json"
+}

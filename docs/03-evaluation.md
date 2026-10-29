@@ -7,7 +7,8 @@
 | 类别 | 含义 | 主要路径 |
 | --- | --- | --- |
 | 历史正式证据 | 独立审查修复**之前**真实 DeepSeek 跑通并归档；**未改写 Trace** | `examples/T01_normal/` … `T08_max_steps/`、`T04_budget_overrun/` |
-| 修复后验证 | 独立审查缺陷修复后的确定性回归 + 真实模型复跑 | `examples/unit_tests/pytest_final_pre_commit.txt`（74 passed）；`examples/T04_budget_overrun_post_fix/`；`examples/T02_missing_constraints/` |
+| 修复后验证 | 独立审查缺陷修复后的确定性回归 + 真实模型复跑 | `examples/unit_tests/pytest_final_pre_commit.txt`；`examples/T04_budget_overrun_post_fix/`；`examples/T02_missing_constraints/` |
+| 集中优化后验证 | save 血缘 / finish 一致性 / CLI 展示之后 | `examples/unit_tests/pytest_post_opt.txt`；`examples/T01_normal_post_opt/`；`examples/T04_budget_overrun_post_opt/` |
 | Mock / 探索性 | 仅流程或非正式 | `--llm mock`；`examples/T04_exploratory/`（`formal_acceptance=false`） |
 
 评审时：动态决策主证据仍看历史 T01/T03/T04/T05 等 Trace；修复后以 post_fix 与单元测试证明守卫/指纹/参数校验未破坏真实重规划能力。
@@ -21,7 +22,7 @@
 | 真实场景（修复后） | `examples/T04_budget_overrun_post_fix/` | 修复后仍能超限重规划 |
 | Mock CLI | `--llm mock` | 仅流程；不得当决策证据 |
 
-提交前全量单元测试：`examples/unit_tests/pytest_final_pre_commit.txt`（**74 passed**）。
+提交前全量单元测试（集中优化后）：`examples/unit_tests/pytest_post_opt.txt`（**84 passed**）。
 
 ## 3. 场景总表
 

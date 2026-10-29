@@ -1,0 +1,6 @@
+[进度] 工具=update_plan → 成功 | 原因=mock complete-path: create plan | 计划步骤=s1,s2,s3,s4
+[进度] 工具=search_materials → 成功 | 原因=mock complete-path: search
+[进度] 工具=generate_script → 成功 | 原因=mock complete-path: generate
+[进度] 工具=estimate_cost → 成功 | 原因=mock complete-path: estimate
+[进度] 工具=save_plan → 成功 | 原因=mock complete-path: save | 幂等复用 plan_id=plan_20261029T104711Z_3cadc700
+[进度] 工具=finish → 成功 | 结束 status=completed

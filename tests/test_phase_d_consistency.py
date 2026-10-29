@@ -102,7 +102,9 @@ def test_replan_keeps_search_requires_new_estimate(executor, tmp_path):
             "reason": "t",
         },
     )
-    assert stale2["error"]["code"] == "STALE_ESTIMATE"
+    # 旧 estimate 不在当前 save 依赖链上 → DEPENDENCY_ARTIFACT_MISMATCH；
+    # 若绕过血缘仍会因 script/format 不一致得到 STALE_ESTIMATE。
+    assert stale2["error"]["code"] in ("DEPENDENCY_ARTIFACT_MISMATCH", "STALE_ESTIMATE")
 
     r6 = state.steps["s6"].attempts[-1].result
     ok_save = executor.dispatch(

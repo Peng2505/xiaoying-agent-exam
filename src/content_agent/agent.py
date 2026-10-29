@@ -13,8 +13,9 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
+from content_agent.display import format_tool_progress
 from content_agent.executor import ToolExecutor
 from content_agent.llm import LLMClient, LLMResponse
 from content_agent.prompts import SYSTEM_PROMPT, state_summary, tool_schemas, user_task_message
@@ -31,6 +32,8 @@ from content_agent.trace import TraceWriter
 # 连续无效响应（无 tool_call / 全部解析失败）上限，防止空转
 MAX_INVALID_STREAK = 3
 
+ProgressFn = Callable[[str], None]
+
 
 class ContentAgent:
     def __init__(
@@ -40,11 +43,13 @@ class ContentAgent:
         executor: ToolExecutor,
         runtime: ToolRuntime,
         runs_dir: Path,
+        on_progress: ProgressFn | None = None,
     ):
         self.llm = llm
         self.executor = executor
         self.runtime = runtime
         self.runs_dir = Path(runs_dir)
+        self.on_progress = on_progress
 
     def run(self, state: RunState, *, is_resume: bool = False) -> dict[str, Any]:
         run_dir = self.runs_dir / state.run_id
@@ -236,6 +241,16 @@ class ContentAgent:
                         "content": json.dumps(observation, ensure_ascii=False, default=str),
                     }
                 )
+
+                if self.on_progress is not None:
+                    self.on_progress(
+                        format_tool_progress(
+                            tool=tc.name,
+                            ok=bool(observation.get("ok")),
+                            observation=observation,
+                            arguments=tc.arguments if isinstance(tc.arguments, dict) else None,
+                        )
+                    )
 
                 if observation.get("ok") and (observation.get("data") or {}).get("finished"):
                     finished = True

@@ -171,6 +171,7 @@ def apply_plan_update(state: RunState, proposed: list[dict[str, Any]]) -> dict[s
             attempts=list(existing.attempts) if existing else [],
             artifact_id=existing.artifact_id if existing else None,
             error=existing.error if existing else None,
+            optional=bool(raw.get("optional", False)),
         )
 
     # 保持原成功步骤顺序，再追加新步骤
@@ -205,6 +206,95 @@ def check_dependencies(state: RunState, step: Step) -> dict[str, Any] | None:
                 dependency=dep,
                 dependency_status=dep_step.status,
             )
+    return None
+
+
+def ancestor_step_ids(state: RunState, step: Step) -> set[str]:
+    """收集 step 依赖链上的全部祖先 step_id（不含自身）。"""
+    found: set[str] = set()
+
+    def walk(sid: str) -> None:
+        node = state.steps.get(sid)
+        if node is None:
+            return
+        for dep in node.depends_on:
+            if dep in found:
+                continue
+            found.add(dep)
+            walk(dep)
+
+    walk(step.step_id)
+    return found
+
+
+def check_save_plan_artifacts(
+    state: RunState,
+    step: Step,
+    args: dict[str, Any],
+) -> dict[str, Any] | None:
+    """save_plan 使用的 script_id / estimate_id 必须来自当前依赖链上已成功步骤的产物。
+
+    禁止：声明依赖估算步骤 A，却传入无关/废弃路径上估算步骤 B 的 estimate_id。
+    """
+    if step.tool != "save_plan":
+        return None
+
+    script_id = args.get("script_id")
+    estimate_id = args.get("estimate_id")
+    if not isinstance(script_id, str) or not script_id.strip():
+        return guard_rejected("INVALID_ARGUMENTS", "save_plan 需要非空 script_id", step_id=step.step_id)
+    if not isinstance(estimate_id, str) or not estimate_id.strip():
+        return guard_rejected("INVALID_ARGUMENTS", "save_plan 需要非空 estimate_id", step_id=step.step_id)
+
+    ancestors = ancestor_step_ids(state, step)
+    allowed_scripts: dict[str, str] = {}
+    allowed_estimates: dict[str, str] = {}
+    for sid in ancestors:
+        dep = state.steps[sid]
+        if dep.status != STEP_SUCCEEDED or not dep.artifact_id:
+            continue
+        if dep.tool == "generate_script":
+            allowed_scripts[dep.artifact_id] = sid
+        elif dep.tool == "estimate_cost":
+            allowed_estimates[dep.artifact_id] = sid
+
+    if estimate_id not in allowed_estimates:
+        return guard_rejected(
+            "DEPENDENCY_ARTIFACT_MISMATCH",
+            f"save_plan 步骤 {step.step_id} 依赖链上的成功估算产物为 "
+            f"{sorted(allowed_estimates) or '（无）'}，不能使用 {estimate_id}。"
+            "请使用当前有效依赖步骤产出的 estimate_id。",
+            step_id=step.step_id,
+            requested_estimate_id=estimate_id,
+            allowed_estimate_ids=sorted(allowed_estimates),
+            allowed_from_steps=allowed_estimates,
+        )
+    if script_id not in allowed_scripts:
+        return guard_rejected(
+            "DEPENDENCY_ARTIFACT_MISMATCH",
+            f"save_plan 步骤 {step.step_id} 依赖链上的成功脚本产物为 "
+            f"{sorted(allowed_scripts) or '（无）'}，不能使用 {script_id}。",
+            step_id=step.step_id,
+            requested_script_id=script_id,
+            allowed_script_ids=sorted(allowed_scripts),
+            allowed_from_steps=allowed_scripts,
+        )
+
+    # 估算必须确实存在且来自成功工具结果（artifact 表）
+    estimate = state.artifacts.get("estimates", {}).get(estimate_id)
+    script = state.artifacts.get("scripts", {}).get(script_id)
+    if not estimate:
+        return guard_rejected(
+            "DEPENDENCY_ARTIFACT_MISMATCH",
+            f"估算产物 {estimate_id} 不存在或未成功生成",
+            step_id=step.step_id,
+        )
+    if not script:
+        return guard_rejected(
+            "DEPENDENCY_ARTIFACT_MISMATCH",
+            f"脚本产物 {script_id} 不存在或未成功生成",
+            step_id=step.step_id,
+        )
     return None
 
 
@@ -314,17 +404,59 @@ def validate_finish(state: RunState, status: str) -> dict[str, Any] | None:
     if status != "completed":
         return guard_rejected("INVALID_FINISH", f"finish.status 只能是 completed 或 incomplete，当前：{status}")
 
-    # 仅当前有效且成功的 save_plan；superseded 不得参与完成判断
-    saved = [
+    # 当前有效计划 = 非 superseded。必需步骤（非 optional）必须全部 succeeded。
+    effective = [s for s in state.steps.values() if s.status != STEP_SUPERSEDED]
+    incomplete = [
         s
-        for s in state.steps.values()
-        if s.tool == "save_plan" and s.status == STEP_SUCCEEDED
+        for s in effective
+        if not s.optional and s.status != STEP_SUCCEEDED
     ]
+    if incomplete:
+        detail = ", ".join(f"{s.step_id}({s.status})" for s in incomplete)
+        return guard_rejected(
+            "FINISH_NOT_READY",
+            f"不能声明 completed：当前有效计划仍有未成功的必需步骤：{detail}",
+            incomplete_steps=[
+                {"step_id": s.step_id, "tool": s.tool, "status": s.status, "optional": s.optional}
+                for s in incomplete
+            ],
+        )
+
+    # 必须有当前有效（非废弃）且成功的 save_plan
+    saved = [s for s in effective if s.tool == "save_plan" and s.status == STEP_SUCCEEDED]
     if not saved:
         return guard_rejected(
             "FINISH_NOT_READY",
-            "不能声明 completed：尚无成功的 save_plan 步骤",
+            "不能声明 completed：当前有效计划中尚无成功的 save_plan 步骤",
         )
+
+    # 成功保存使用的估算/脚本应仍能在产物表中找到（与当前有效方案一致）
+    for save_step in saved:
+        last_ok = next(
+            (a for a in reversed(save_step.attempts) if a.result.get("ok")),
+            None,
+        )
+        if last_ok is None:
+            return guard_rejected(
+                "FINISH_NOT_READY",
+                f"save_plan 步骤 {save_step.step_id} 标记成功但无成功 attempt",
+                step_id=save_step.step_id,
+            )
+        data = last_ok.result.get("data") or {}
+        script_id = data.get("script_id")
+        estimate_id = data.get("estimate_id")
+        if script_id and script_id not in state.artifacts.get("scripts", {}):
+            return guard_rejected(
+                "FINISH_NOT_READY",
+                f"已保存方案引用的脚本 {script_id} 已不存在",
+                step_id=save_step.step_id,
+            )
+        if estimate_id and estimate_id not in state.artifacts.get("estimates", {}):
+            return guard_rejected(
+                "FINISH_NOT_READY",
+                f"已保存方案引用的估算 {estimate_id} 已不存在",
+                step_id=save_step.step_id,
+            )
     return None
 
 

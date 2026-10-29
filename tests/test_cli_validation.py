@@ -14,7 +14,11 @@ from content_agent.cli import (
 
 
 def _run(capsys, *argv):
-    code = main(list(argv))
+    # 测试依赖机器可读 JSON；默认 CLI 已改为 text
+    argv = list(argv)
+    if "--output" not in argv:
+        argv.extend(["--output", "json"])
+    code = main(argv)
     return code, json.loads(capsys.readouterr().out)
 
 
@@ -40,6 +44,28 @@ def test_missing_both_lists_both_and_does_not_fill_defaults(capsys):
     assert code == EXIT_INVALID_INPUT
     assert out["missing"] == ["budget", "deadline"]
     assert "constraints" not in out
+
+
+def test_missing_budget_default_text_output_is_human_readable(capsys):
+    code = main(
+        [
+            "run",
+            "--topic",
+            "夏季新品发布",
+            "--deadline",
+            "2026-11-20",
+            "--today",
+            "2026-11-01",
+            "--output",
+            "text",
+        ]
+    )
+    out = capsys.readouterr().out
+    assert code == EXIT_INVALID_INPUT
+    assert "missing_constraints" in out or "缺少" in out
+    assert "未调用 LLM" in out
+    # 默认 text 不应整段是 JSON 对象
+    assert not out.strip().startswith("{")
 
 
 def test_blank_budget_counts_as_missing():

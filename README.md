@@ -43,9 +43,16 @@ MAX_CUMULATIVE_STEPS=36
 content-agent run --topic "夏季新品发布" --budget 15 --deadline 2026-11-20 --today 2026-11-01
 ```
 
+默认输出为**中文可读报告**。需要完整 JSON（测试/归档）时加 `--output json`；需要过程日志时加 `--verbose`（进度写在 stderr，不污染 JSON stdout）。
+
+```powershell
+content-agent run --topic "夏季新品发布" --budget 15 --deadline 2026-11-20 --today 2026-11-01 --output json
+content-agent run --topic "夏季新品发布" --budget 15 --deadline 2026-11-20 --today 2026-11-01 --verbose
+```
+
 等价：`python -m content_agent run ...`
 
-缺少 `--budget` 或 `--deadline` 时，CLI 直接返回 `missing_constraints`，不调用 LLM。
+缺少 `--budget` 或 `--deadline` 时，CLI 直接拒绝，不调用 LLM。
 
 ## 场景示例
 

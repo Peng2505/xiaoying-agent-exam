@@ -18,6 +18,9 @@
 | 非法工具参数不崩溃 | `tools._validate_args` + 异常兜底 | 回归测试 | ✅ 结构化错误；无虚假产物 | `tests/test_tool_arg_validation.py` |
 | 执行上限 | `MAX_STEPS` | T08 + mock 上限测试 | ✅ max_steps_reached | `examples/T08_max_steps/` |
 | 保存前复核预算时间 | `tools.save_plan` | 单元测试超限拒绝 | ✅ CONSTRAINT_VIOLATION | `tests/test_tools.py` |
+| save 产物须来自依赖链 | `check_save_plan_artifacts` | 回归测试 | ✅ 无关 estimate 拒绝 | `tests/test_save_dependency_artifacts.py` |
+| finish 与当前计划一致 | `validate_finish` | 回归测试 | ✅ 未完成必需步骤不可 completed | `tests/test_finish_plan_consistency.py` |
+| CLI 可读报告 / JSON | `display.py` + `--output` | CLI 测试 | ✅ 默认 text；json 可解析 | `tests/test_cli_display.py` |
 | 失败不标成功 | `record_attempt` | T03/T07 | ✅ failed attempts 保留 | state.json |
 | 步数上限未完成状态 | `agent.py` | T08 | ✅ | T08 report |
 | 运行记录含步骤/参数/摘要 | `trace.py` | 各 T0x | ✅ | `*/trace.jsonl` |

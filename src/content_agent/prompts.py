@@ -24,7 +24,8 @@ SYSTEM_PROMPT = """你是内容活动方案规划 Agent。目标：在用户给�
 
 可用控制工具：
 5. update_plan：提交或调整任务计划（含 step_id、依赖）。已成功步骤不得删除或改工具。
-6. finish：结束任务。status=completed 仅在 save_plan 已成功时允许；否则用 incomplete 并说明原因。
+6. finish：结束任务。status=completed 仅当当前有效计划中全部必需步骤成功、且存在成功的 save_plan 时允许；superseded 与 optional 步骤不阻碍完成。否则用 incomplete 并说明原因。
+7. save_plan 传入的 script_id / estimate_id 必须来自该保存步骤依赖链上已成功步骤的产物，不得使用无关或旧路径的估算。
 
 硬约束由程序执行：
 - 缺少预算或截止时间不会进入本对话（已在入口拒绝）。
@@ -123,6 +124,10 @@ def tool_schemas() -> list[dict[str, Any]]:
                                 ],
                             },
                             "depends_on": {"type": "array", "items": {"type": "string"}},
+                            "optional": {
+                                "type": "boolean",
+                                "description": "为 true 时该步骤非必需，finish(completed) 不要求其成功",
+                            },
                         },
                         "required": ["step_id", "name", "tool"],
                     },

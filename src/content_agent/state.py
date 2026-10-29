@@ -61,6 +61,7 @@ class Step:
     attempts: list[Attempt] = field(default_factory=list)
     artifact_id: str | None = None
     error: dict[str, Any] | None = None
+    optional: bool = False  # True 时 finish(completed) 不要求该步骤必须成功
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -72,6 +73,7 @@ class Step:
             "attempts": [a.to_dict() for a in self.attempts],
             "artifact_id": self.artifact_id,
             "error": self.error,
+            "optional": bool(self.optional),
         }
 
     @classmethod
@@ -85,6 +87,7 @@ class Step:
             attempts=[Attempt.from_dict(a) for a in data.get("attempts") or []],
             artifact_id=data.get("artifact_id"),
             error=data.get("error"),
+            optional=bool(data.get("optional", False)),
         )
 
 

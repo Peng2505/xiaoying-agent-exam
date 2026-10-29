@@ -14,6 +14,7 @@ from content_agent.guards import (
     apply_plan_update,
     check_attempt_limit,
     check_dependencies,
+    check_save_plan_artifacts,
     compute_gap,
     guard_rejected,
     reuse_or_reject_args_mismatch,
@@ -122,6 +123,10 @@ class ToolExecutor:
         dep_err = check_dependencies(state, step)
         if dep_err:
             return dep_err
+
+        lineage_err = check_save_plan_artifacts(state, step, args)
+        if lineage_err:
+            return lineage_err
 
         limit_err = check_attempt_limit(state, step)
         if limit_err:
